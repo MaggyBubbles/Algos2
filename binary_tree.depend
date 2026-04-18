@@ -1,0 +1,12 @@
+# depslib dependency file v1.0
+1776505865 source:c:\users\magda\desktop\ue2niemieckendöl\binary_tree\tree.cpp
+
+1776515909 source:c:\users\magda\desktop\ue2niemieckendöl\binary_tree\main.c
+	<stdio.h>
+	<stdlib.h>
+	"tree.h"
+
+1776515918 c:\users\magda\desktop\ue2niemieckendöl\binary_tree\tree.h
+	<stdlib.h>
+	<stdio.h>
+
