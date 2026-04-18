@@ -8,9 +8,7 @@ int main()
     printf("Enter file name:\n");
     scanf("%49s", &filename[0]);
     tree = getTreeFromFile(tree, filename); //legt den binary tree an
-
-    //test zur Ausgabe
-    printf("%d\n%d\n%d\n%d\n", tree->key, tree->right->key, tree->right->right->key, tree->left->key);
+    traverseTree(tree);
 
     return 0;
 }
@@ -43,21 +41,65 @@ struct tnode* getTreeFromFile(struct tnode* tree, char filename[])
 {
     file = fopen(filename, "r"); //Open to read
     if(file == NULL)
+    {
         printf("Error opening file\n");
+    }
     else
     {
         printf("File opened\n");
         int x;
         while(fscanf(file, "%d\n", &x) == 1)//solange 1 Element gefunden wird, wird die Datei ausgelesen
         {
-           tree = insertion(x, tree); //hier findet das Einfügen in den binary tree statt
+            tree = insertion(x, tree); //hier findet das Einfügen in den binary tree statt
         }
         fclose(file);
     }
     return tree;
 }
 
-int balance(int left, int right)
+int calcBalance(int left, int right)
 {
     return right-left;
+}
+
+void traverseTree(struct tnode* tree)
+{
+    if(tree != NULL)
+    {
+        traverseTree(tree->right);
+        traverseTree(tree->left);
+        int balace = heightOfNode(tree->right)-heightOfNode(tree->left);
+        printf("bal(%d) = %d", tree->key, balace);
+        if(balace < -1 || balace > 1)
+        {
+            printf(" (AVL violation!)");
+        }
+        printf("\n");
+    }
+}
+
+int heightOfNode(struct tnode* tree)
+{
+   if(tree == NULL)
+   {
+       return 0;
+   }
+   int right = 0;
+   int left = 0;
+   int height = 0;
+   if(tree != NULL)
+   {
+    right = heightOfNode(tree->right);
+    left = heightOfNode(tree->left);
+   }
+   if(right > left)
+   {
+       height = right+1;
+   }
+   else
+   {
+       height = left+1;
+   }
+
+   return  height;
 }

@@ -12,6 +12,6 @@ char filename[50] = "tree.txt";
 
 struct tnode* insertion(int key, struct tnode* tree);
 struct tnode* getTreeFromFile(struct tnode* tree, char filename[]);
-int balance(int left, int right);
-
-
+int calcBalance(int left, int right);
+void traverseTree(struct tnode* tree);
+int heightOfNode(struct tnode* tree);
