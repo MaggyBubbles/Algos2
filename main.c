@@ -5,15 +5,9 @@
 
 int main()
 {
-    //struct tnode* tree = NULL;
     printf("Enter file name:\n");
     scanf("%49s", &filename[0]);
     treecheck(filename);
-//    tree = getTreeFromFile(tree, filename); //legt den binary tree an
-//    traverseTree(tree);
-//    int min = 0;
-//    min = findMin(tree);
-//    printf("min: %d\n", min);
 
     return 0;
 }
@@ -83,7 +77,6 @@ void traverseTree(struct tnode* tree)
         traverseTree(tree->left);
         int balace = heightOfNode(tree->right)-heightOfNode(tree->left);
         printf("bal(%d) = %d", tree->key, balace);
-
         if(balace < -1 || balace > 1)
         {
             printf(" (AVL violation!)");

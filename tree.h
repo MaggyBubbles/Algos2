@@ -7,7 +7,6 @@ struct tnode* left;
 struct tnode* right;
 };
 
-
 char filename[50] = "tree.txt";
 
 void treecheck(char filename[]);
