@@ -12,3 +12,11 @@ Implementierung: 15 Punkte
 Protokoll: 3 Punkte (Gemeinsam <3)
 • Beschreibung der rekursiven Funktionen
 • O-Notation und Laufzeitvergleich 2
+
+
+Teil 1:
+In main habe ich nur die Eingabe des Textfiles und das Aufrufen der Funktion, damit es dem "treecheck filename" aus der Angabe entspricht
+
+Ich habe zwei .txt dateien angelegt zum ausprobieren
+tree.txt -> ist KEIN avl Baum
+avltree.txt -> ist ein avl Baum

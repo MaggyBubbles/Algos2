@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "tree.h"
-#include <limits.h> //für INT_MAX
+#include <limits.h> //für INT_MAX, INT_MIN
 
 int main()
 {
@@ -16,13 +16,24 @@ void treecheck(char filename[])
 {
     struct tnode* tree = NULL;
     tree = getTreeFromFile(tree, filename); //legt den binary tree an
-    traverseTree(tree);
+    traverseTree(tree); //Durchläuft Baum und gibt ihn und den Balance Faktor aus
     int min = findMin(tree);
     printf("min: %d, ", min);
     int max = findMax(tree);
     printf("max: %d, ", max);
+    float avg = (float)findSum(tree)/countEntries(tree);
+    printf("avg: %.1f\n", avg);
+    if(avl)
+    {
+        printf("AVL: yes\n");
+    }
+    else
+    {
+        printf("AVL: no\n");
+    }
 }
 
+//fügt den Int an die passende Stelle ein
 struct tnode* insertion(int key, struct tnode* tree)
 {
     if (tree == NULL)
@@ -46,6 +57,7 @@ struct tnode* insertion(int key, struct tnode* tree)
     return tree;
 }
 
+//Ließt Werte aus dem File und fügt sie im Tree ein
 struct tnode* getTreeFromFile(struct tnode* tree, char filename[])
 {
     FILE* file;
@@ -66,8 +78,7 @@ struct tnode* getTreeFromFile(struct tnode* tree, char filename[])
     return tree;
 }
 
-
-
+//Durchlauft den Baum und gibt den Balance Faktor aus
 void traverseTree(struct tnode* tree)
 {
 
@@ -80,11 +91,14 @@ void traverseTree(struct tnode* tree)
         if(balace < -1 || balace > 1)
         {
             printf(" (AVL violation!)");
+            int *p = &avl;
+            *p = 0; //setzt avl auf "false", um am Ende auszugeben, ob es ein AVL Baum ist oder nicht
         }
         printf("\n");
     }
 }
 
+//Berechnet die Höhe eines Knoten
 int heightOfNode(struct tnode* tree)
 {
    if(tree == NULL)
@@ -162,4 +176,44 @@ int findMax(struct tnode* tree)
        max = leftMax;
    }
    return  max;
+}
+
+int findSum(struct tnode* tree)
+{
+   if(tree == NULL)
+   {
+       return 0;
+   }
+   int sum = 0;
+   int rightSum = tree->key;
+   int leftSum = tree->key;
+   if(tree != NULL)
+   {
+    rightSum = findSum(tree->right);
+    leftSum = findSum(tree->left);
+   }
+
+    sum = rightSum + leftSum + tree->key;
+
+   return  sum;
+}
+
+int countEntries(struct tnode* tree)
+{
+    if(tree == NULL)
+   {
+       return 0;
+   }
+   int count = 0;
+   int rightCount = 0;
+   int leftCount = 0;
+   if(tree != NULL)
+   {
+    rightCount = countEntries(tree->right);
+    leftCount = countEntries(tree->left);
+   }
+
+    count = rightCount + leftCount+1;
+
+   return  count;
 }
