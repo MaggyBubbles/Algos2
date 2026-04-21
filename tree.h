@@ -19,3 +19,4 @@ int findMin(struct tnode* tree);
 int findMax(struct tnode* tree);
 int findSum(struct tnode* tree);
 int countEntries(struct tnode* tree);
+int heightAndBalance(struct tnode* tree);
