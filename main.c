@@ -158,7 +158,7 @@ int findMin(struct tnode* tree)
     {
         min = rightMin;
     }
-    else if(leftMin < min)
+    if(leftMin < min) // beide Bedinungen werden unabhängig geprueft
     {
         min = leftMin;
     }
@@ -170,7 +170,7 @@ int findMax(struct tnode* tree)
 {
     if(tree == NULL)
     {
-        return INT_MIN; //= -2147483647 (32 bit)
+        return INT_MIN; //= -2147483648 (32 bit)
     }
     int max = tree->key;
     int leftMax = 0;
@@ -185,7 +185,7 @@ int findMax(struct tnode* tree)
     {
         max = rightMax;
     }
-    else if(leftMax > max)
+    if(leftMax > max) // beide Teilbaeume muessen unabhangig geprueft werden
     {
         max = leftMax;
     }
@@ -231,6 +231,8 @@ int countEntries(struct tnode* tree)
 
     return  count;
 }
+
+//die eigentliche Suche: lauft durch den Baum, entscheidet links/rechts, gibt die Laenge zurueck
 int searchKeyHelper(struct tnode* tree, int key, int path[], int depth)
 {
     if (tree == NULL)
@@ -255,9 +257,10 @@ int searchKeyHelper(struct tnode* tree, int key, int path[], int depth)
     }
 }
 
+//startet die Suche und gibt das Ergebnis aus
 int searchKey(struct tnode* tree, int key)
 {
-    int path[100];
+    int path[100]; //keine dynamische Loesung 
 
     int length = searchKeyHelper(tree, key, path, 0);
 
@@ -302,6 +305,7 @@ int isSameTree(struct tnode* a, struct tnode* b)
     return isSameTree(a->left, b->left) && isSameTree(a->right, b->right);
 }
 
+// durchsucht den gesamten Baum rekursiv und prueft an jedem Knoten, ob dort der Subtree beginnt
 int searchSubtree(struct tnode* tree, struct tnode* subtree)
 {
     if (tree == NULL)
