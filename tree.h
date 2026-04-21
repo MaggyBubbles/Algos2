@@ -20,3 +20,7 @@ int findMax(struct tnode* tree);
 int findSum(struct tnode* tree);
 int countEntries(struct tnode* tree);
 int heightAndBalance(struct tnode* tree);
+int searchKey(struct tnode* tree, int key); //added
+int searchKeyHelper(struct tnode* tree, int key, int path[], int depth);
+int isSameTree(struct tnode* a, struct tnode* b);
+int searchSubtree(struct tnode* tree, struct tnode* subtree);

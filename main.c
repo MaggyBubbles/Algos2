@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "tree.h"
-#include <limits.h> //für INT_MAX, INT_MIN
+#include <limits.h> //fï¿½r INT_MAX, INT_MIN
 
 int main()
 {
@@ -18,6 +18,12 @@ void treecheck(char filename[])
     tree = getTreeFromFile(tree, filename); //legt den binary tree an
     heightAndBalance(tree);
     //  traverseTree(tree); //Durchläuft Baum und gibt ihn und den Balance Faktor aus
+    int min = findMin(tree);
+    printf("min: %d, ", min);
+    int max = findMax(tree);
+    printf("max: %d, ", max);
+    float avg = (float)findSum(tree)/countEntries(tree);
+    printf("avg: %.1f\n", avg);
     if(avl)
     {
         printf("AVL: yes\n");
@@ -34,9 +40,29 @@ void treecheck(char filename[])
     float avg = (float)findSum(tree)/countEntries(tree);
     printf("avg: %.1f\n", avg);
 
+    //Programm fragt nach der Zahl, die Zahl wird gespeichert und Funktion aufgerufen
+    int key;
+    printf("Enter key to search:\n");
+    scanf("%d", &key);
+
+    searchKey(tree, key);
+    char subfile[50];
+
+    printf("Enter subtree file:\n");
+    scanf("%49s", subfile);
+
+    struct tnode* subtree = NULL;
+    subtree = getTreeFromFile(subtree, subfile);
+
+    if (searchSubtree(tree, subtree))
+    {
+        printf("Subtree found\n");
+    }else{
+        printf("Subtree not found\n");
+    }
 }
 
-//fügt den Int an die passende Stelle ein
+//fï¿½gt den Int an die passende Stelle ein
 struct tnode* insertion(int key, struct tnode* tree)
 {
     if (tree == NULL)
@@ -60,7 +86,7 @@ struct tnode* insertion(int key, struct tnode* tree)
     return tree;
 }
 
-//Ließt Werte aus dem File und fügt sie im Tree ein
+//Lieï¿½t Werte aus dem File und fï¿½gt sie im Tree ein
 struct tnode* getTreeFromFile(struct tnode* tree, char filename[])
 {
     FILE* file;
@@ -74,7 +100,7 @@ struct tnode* getTreeFromFile(struct tnode* tree, char filename[])
         int x;
         while(fscanf(file, "%d\n", &x) == 1)//solange 1 Element gefunden wird, wird die Datei ausgelesen
         {
-            tree = insertion(x, tree); //hier findet das Einfügen in den binary tree statt
+            tree = insertion(x, tree); //hier findet das Einfï¿½gen in den binary tree statt
         }
         fclose(file);
     }
@@ -101,7 +127,7 @@ struct tnode* getTreeFromFile(struct tnode* tree, char filename[])
     }
 }
 
-//Berechnet die Höhe eines Knoten
+//Berechnet die Hï¿½he eines Knoten
 int heightOfNode(struct tnode* tree)
 {
    if(tree == NULL)
@@ -254,4 +280,89 @@ int countEntries(struct tnode* tree)
     count = rightCount + leftCount+1;
 
     return  count;
+}
+int searchKeyHelper(struct tnode* tree, int key, int path[], int depth)
+{
+    if (tree == NULL)
+    {
+        return 0;
+    }
+
+    path[depth] = tree->key;
+
+    if (key == tree->key)
+    {
+        return depth + 1; // LÃ¤nge des Pfades
+    }
+
+    if (key < tree->key)
+    {
+        return searchKeyHelper(tree->left, key, path, depth + 1);
+    }
+    else
+    {
+        return searchKeyHelper(tree->right, key, path, depth + 1);
+    }
+}
+
+int searchKey(struct tnode* tree, int key)
+{
+    int path[100];
+
+    int length = searchKeyHelper(tree, key, path, 0);
+
+    if (length == 0)
+    {
+        printf("%d not found!\n", key);
+        return 0;
+    }
+
+    printf("%d found ", key);
+
+    for (int i = 0; i < length; i++)
+    {
+        printf("%d", path[i]);
+        if (i < length - 1)
+        {
+            printf(", ");
+        }
+    }
+
+    printf("\n");
+
+    return 1;
+}
+int isSameTree(struct tnode* a, struct tnode* b)
+{
+    if (a == NULL && b == NULL)
+    {
+        return 1;
+    }
+
+    if (a == NULL || b == NULL)
+    {
+        return 0;
+    }
+
+    if (a->key != b->key)
+    {
+        return 0;
+    }
+
+    return isSameTree(a->left, b->left) && isSameTree(a->right, b->right);
+}
+
+int searchSubtree(struct tnode* tree, struct tnode* subtree)
+{
+    if (tree == NULL)
+    {
+        return 0;
+    }
+
+    if (isSameTree(tree, subtree))
+    {
+        return 1;
+    }
+
+    return searchSubtree(tree->left, subtree) || searchSubtree(tree->right, subtree);
 }
