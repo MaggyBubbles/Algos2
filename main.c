@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "tree.h"
-#include <limits.h> //f�r INT_MAX, INT_MIN
+#include <limits.h> //fuer INT_MAX, INT_MIN
 
 int main()
 {
@@ -16,57 +16,50 @@ void treecheck(char filename[])
 {
     struct tnode* tree = NULL;
     tree = getTreeFromFile(tree, filename); //legt den binary tree an
-    heightAndBalance(tree);
-    //  traverseTree(tree); //Durchl�uft Baum und gibt ihn und den Balance Faktor aus
-    int min = findMin(tree);
-    printf("min: %d, ", min);
-    int max = findMax(tree);
-    printf("max: %d, ", max);
-    float avg = (float)findSum(tree)/countEntries(tree);
-    printf("avg: %.1f\n", avg);
-    if(avl)
+    heightAndBalance(tree);//Durchlaeuft Baum und gibt ihn und den Balance Faktor aus
+    if(tree!= NULL)
     {
-        printf("AVL: yes\n");
-    }
-    else
-    {
-        printf("AVL: no\n");
-    }
-    avl = 1;
-    int min = findMin(tree);
-    printf("min: %d, ", min);
-    int max = findMax(tree);
-    printf("max: %d, ", max);
-    float avg = (float)findSum(tree)/countEntries(tree);
-    printf("avg: %.1f\n", avg);
+        if(avl)
+        {
+            printf("AVL: yes\n");
+        }
+        else
+        {
+            printf("AVL: no\n");
+        }
+        avl = 1;
+        int min = findMin(tree);
+        printf("min: %d, ", min);
+        int max = findMax(tree);
+        printf("max: %d, ", max);
+        float avg = (float)findSum(tree)/countEntries(tree);
+        printf("avg: %.1f\n", avg);
 
-    //Programm fragt nach der Zahl, die Zahl wird gespeichert und Funktion aufgerufen
-    int key;
-    printf("Enter key to search:\n");
+        int key;
+        printf("Enter key to search:\n");
+        scanf("%d", &key);
 
-    //Programm fragt nach der Zahl, die Zahl wird gespeichert und Funktion aufgerufen
-    int key;
-    printf("Enter key to search:\n");
-    scanf("%d", &key);
+        searchKey(tree, key);
+        char subfile[50];
 
-    searchKey(tree, key);
-    char subfile[50];
+        printf("Enter subtree file:\n");
+        scanf("%49s", subfile);
 
-    printf("Enter subtree file:\n");
-    scanf("%49s", subfile);
+        struct tnode* subtree = NULL;
+        subtree = getTreeFromFile(subtree, subfile);
 
-    struct tnode* subtree = NULL;
-    subtree = getTreeFromFile(subtree, subfile);
-
-    if (searchSubtree(tree, subtree))
-    {
-        printf("Subtree found\n");
-    }else{
-        printf("Subtree not found\n");
+        if (searchSubtree(tree, subtree))
+        {
+            printf("Subtree found\n");
+        }
+        else
+        {
+            printf("Subtree not found\n");
+        }
     }
 }
 
-//f�gt den Int an die passende Stelle ein
+//fuegt den Int an die passende Stelle ein
 struct tnode* insertion(int key, struct tnode* tree)
 {
     if (tree == NULL)
@@ -90,7 +83,7 @@ struct tnode* insertion(int key, struct tnode* tree)
     return tree;
 }
 
-//Lie�t Werte aus dem File und f�gt sie im Tree ein
+//Liesst Werte aus dem File und fuegt sie im Tree ein
 struct tnode* getTreeFromFile(struct tnode* tree, char filename[])
 {
     FILE* file;
@@ -104,59 +97,12 @@ struct tnode* getTreeFromFile(struct tnode* tree, char filename[])
         int x;
         while(fscanf(file, "%d\n", &x) == 1)//solange 1 Element gefunden wird, wird die Datei ausgelesen
         {
-            tree = insertion(x, tree); //hier findet das Einf�gen in den binary tree statt
+            tree = insertion(x, tree); //hier findet das Einfuegen in den binary tree statt
         }
         fclose(file);
     }
     return tree;
 }
-
-//Durchlauft den Baum und gibt den Balance Faktor aus
-/*void traverseTree(struct tnode* tree)
-{
-
-    if(tree != NULL)
-    {
-        traverseTree(tree->right);
-        traverseTree(tree->left);
-        int balace = heightOfNode(tree->right)-heightOfNode(tree->left);
-        printf("bal(%d) = %d", tree->key, balace);
-        if(balace < -1 || balace > 1)
-        {
-            printf(" (AVL violation!)");
-            int *p = &avl;
-            *p = 0; //setzt avl auf "false", um am Ende auszugeben, ob es ein AVL Baum ist oder nicht
-        }
-        printf("\n");
-    }
-}
-
-//Berechnet die H�he eines Knoten
-int heightOfNode(struct tnode* tree)
-{
-   if(tree == NULL)
-   {
-       return 0;
-   }
-   int right = 0;
-   int left = 0;
-   int height = 0;
-   if(tree != NULL)
-   {
-    right = heightOfNode(tree->right);
-    left = heightOfNode(tree->left);
-   }
-   if(right > left)
-   {
-       height = right+1;
-   }
-   else
-   {
-       height = left+1;
-   }
-
-   return  height;
-}*/
 
 int heightAndBalance(struct tnode* tree)
 {
@@ -296,92 +242,7 @@ int searchKeyHelper(struct tnode* tree, int key, int path[], int depth)
 
     if (key == tree->key)
     {
-        return depth + 1; // Länge des Pfades
-    }
-
-    if (key < tree->key)
-    {
-        return searchKeyHelper(tree->left, key, path, depth + 1);
-    }
-    else
-    {
-        return searchKeyHelper(tree->right, key, path, depth + 1);
-    }
-}
-
-int searchKey(struct tnode* tree, int key)
-{
-    int path[100];
-
-    int length = searchKeyHelper(tree, key, path, 0);
-
-    if (length == 0)
-    {
-        printf("%d not found!\n", key);
-        return 0;
-    }
-
-    printf("%d found ", key);
-
-    for (int i = 0; i < length; i++)
-    {
-        printf("%d", path[i]);
-        if (i < length - 1)
-        {
-            printf(", ");
-        }
-    }
-
-    printf("\n");
-
-    return 1;
-}
-int isSameTree(struct tnode* a, struct tnode* b)
-{
-    if (a == NULL && b == NULL)
-    {
-        return 1;
-    }
-
-    if (a == NULL || b == NULL)
-    {
-        return 0;
-    }
-
-    if (a->key != b->key)
-    {
-        return 0;
-    }
-
-    return isSameTree(a->left, b->left) && isSameTree(a->right, b->right);
-}
-
-int searchSubtree(struct tnode* tree, struct tnode* subtree)
-{
-    if (tree == NULL)
-    {
-        return 0;
-    }
-
-    if (isSameTree(tree, subtree))
-    {
-        return 1;
-    }
-
-    return searchSubtree(tree->left, subtree) || searchSubtree(tree->right, subtree);
-}
-int searchKeyHelper(struct tnode* tree, int key, int path[], int depth)
-{
-    if (tree == NULL)
-    {
-        return 0;
-    }
-
-    path[depth] = tree->key;
-
-    if (key == tree->key)
-    {
-        return depth + 1; // Länge des Pfades
+        return depth + 1; // Laenge des Pfades
     }
 
     if (key < tree->key)
